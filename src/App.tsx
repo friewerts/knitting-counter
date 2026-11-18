@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useWakeLock } from './useWakeLock';
+import UpdatePrompt from './UpdatePrompt';
 
 function App() {
   // Initialize state from local storage or default to 0
@@ -137,6 +138,7 @@ function App() {
           )}
         </div>
       </div>
+      <UpdatePrompt />
     </div>
   );
 }
