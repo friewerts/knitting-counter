@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useWakeLock } from './useWakeLock';
 
 function App() {
   // Initialize state from local storage or default to 0
@@ -11,6 +12,8 @@ function App() {
   useEffect(() => {
     localStorage.setItem('knitting-row-count', rowCount.toString());
   }, [rowCount]);
+
+  const wakeLock = useWakeLock();
 
   const [isResetting, setIsResetting] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -112,6 +115,27 @@ function App() {
             </button>
           </>
         )}
+
+        <div className="wake-lock">
+          <label className="wake-lock-toggle">
+            <span className="wake-lock-label">Bildschirm anlassen</span>
+            <input
+              type="checkbox"
+              role="switch"
+              className="wake-lock-input"
+              checked={wakeLock.isSupported && wakeLock.enabled}
+              disabled={!wakeLock.isSupported}
+              onChange={(e) => wakeLock.setEnabled(e.target.checked)}
+            />
+            <span className="wake-lock-switch" aria-hidden="true" />
+          </label>
+          {!wakeLock.isSupported && (
+            <p className="wake-lock-hint">Wird von diesem Browser nicht unterstützt.</p>
+          )}
+          {wakeLock.isSupported && wakeLock.enabled && wakeLock.hasError && (
+            <p className="wake-lock-hint">Konnte nicht aktiviert werden (z.&nbsp;B. Energiesparmodus).</p>
+          )}
+        </div>
       </div>
     </div>
   );
